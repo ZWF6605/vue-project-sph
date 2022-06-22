@@ -1,23 +1,23 @@
 <template>
   <div id="app">
-      <Header/>
-      我是根组件
-      <Footer/>
+    <Header />
+    <!-- 路由组件出口的地方 -->
+    <router-view></router-view>
+    <Footer />
   </div>
 </template>
 
 <script>
-import Header from '@/components/Header/index.vue'
-import Footer from '@/components/Footer'
+import Header from "@/components/Header/index.vue";
+import Footer from "@/components/Footer";
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Header,
-    Footer
-  }
-}
+    Footer,
+  },
+};
 </script>
 
 <style>
-
 </style>
