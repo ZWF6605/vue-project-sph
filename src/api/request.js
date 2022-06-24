@@ -6,6 +6,7 @@ import nprogress from "nprogress";
 import 'nprogress/nprogress.css'
 //start：进度条开始 done：进度条结束
 
+
 //1.利用axios对象的方法create，创建一个axios实例
 //2.request就是axios，只不过稍微配置一下
 const requests = axios.create({
@@ -19,6 +20,7 @@ const requests = axios.create({
 //请求拦截器：在发请求之前，请求拦截器可以检测到，可以在请求发出去之前做一些事情
 requests.interceptors.request.use((config)=>{
     //config:配置对象，对象里面有个属性很重要，header请求头
+    
     //进度条开始
     nprogress.start();
     return config;
