@@ -9,7 +9,7 @@ const state = {
 const mutations = {
     CATEGORYLIST(state, categoryList) {
         state.categoryList = categoryList
-        state.categoryList.length=16
+        state.categoryList.length=15
     }
 }
 const actions = {

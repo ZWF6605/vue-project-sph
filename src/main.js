@@ -8,6 +8,9 @@ import TypeNav from '@/components/TypeNav'
 Vue.component(TypeNav.name,TypeNav)
 //引入仓库
 import store from '@/store'
+//y引入mockServe.js----mock数据
+import '@/mock/mockServe'
+
 
 Vue.config.productionTip = false
 
