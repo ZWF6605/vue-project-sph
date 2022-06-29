@@ -16,3 +16,9 @@ export const reqGetBannerList = () => mockRequests({
     url: '/banner',
     method: 'get'
 })
+
+//获取floor
+export const reqGetFloorList = ()=> mockRequests({
+    url:"/floor",
+    method:'get'
+})

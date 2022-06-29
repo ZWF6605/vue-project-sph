@@ -1,13 +1,15 @@
 import {
     reqCategoryList,
-    reqGetBannerList
+    reqGetBannerList,
+    reqGetFloorList
 } from "@/api"
 //home模块的小仓库
 const state = {
     //state中数据的默认值不能随便写，服务器返回的是对象、数组【根据接口返回值初始化的】
     categoryList: [],
     //轮播图的数据
-    bannerList:[]
+    bannerList:[],
+    floorList:[]
 }
 const mutations = {
     CATEGORYLIST(state, categoryList) {
@@ -16,6 +18,9 @@ const mutations = {
     },
     GETBANNERLIST(state, bannerList) {
         state.bannerList = bannerList
+    },
+    GETFLOORLIST(state,floorList){
+        state.floorList = floorList
     }
 }
 const actions = {
@@ -32,7 +37,13 @@ const actions = {
         if (result.code === 200) {
             commit("GETBANNERLIST", result.data)
         }
-    }
+    },
+    async getFloorList({commit}) {
+        let result = await reqGetFloorList()
+        if (result.code === 200) {
+            commit("GETFLOORLIST", result.data)
+        }
+    },
 }
 const getters = {}
 export default {

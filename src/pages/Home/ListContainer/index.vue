@@ -3,24 +3,15 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <div class="swiper-container" ref="mySwiper">
           <div class="swiper-wrapper">
             <div
               class="swiper-slide"
-              v-for="(carousel, index) in bannerList"
+              v-for="(carousel) in bannerList"
               :key="carousel.id"
             >
               <img :src="carousel.imgUrl" />
             </div>
-            <!-- <div class="swiper-slide">
-              <img src="./images/banner2.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner3.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner4.jpg" />
-            </div> -->
           </div>
           <!-- 如果需要分页器 -->
           <div class="swiper-pagination"></div>
@@ -109,31 +100,48 @@ import { mapState } from "vuex";
 import Swiper from "swiper";
 export default {
   name: "ListContainer",
+  //mounted：组件挂载完毕，正常说组件的结构（DOM）已经有了
+  //为什么Swiper实例在mounted不能直接书写，因为DOM结构不完整
   mounted() {
     //派发action，通过vuex发起ajax请求，将数据存储在仓库里
     this.$store.dispatch("getBannerList");
     //在new swiper实例之前，页面中必须得有结构，因为结构不完整
     //因为dispatch当中涉及到异步语句，导致v-for遍历的时候结构还没渲染完全，所以不行
     //可以用定时器来完成，但是有BUG
-    setTimeout(() => {
-      var mySwiper = new Swiper(document.querySelector(".swiper-container"), {
-        loop: true,
-        //如果需要分页器
-        pagination: {
-          el: ".swiper-pagination",
-          //点击小球的时候也切换图片
-          clickable: true,
-        },
-        //如果需要前进后退按钮
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-      });
-    },500);
   },
   computed: {
     ...mapState({ bannerList: (state) => state.home.bannerList }),
+  },
+  watch: {
+    //监听bannerList数据的变化：这条数据发生过变化---由空数组变为数组里面有四个元素
+    bannerList: {
+      handler(newValue, oldValue) {
+        //通过watch监听bannerList的变化
+        //如果执行handler方法，代表组件实例身上的bannerList已经有数据了
+        //当前这个函数执行，只能保证有数据了，但是v-for不一定执行结束
+        //nextTick:在下次DOM更新循环结束之后，执行延迟回调，在修改数据之后，立即使用这个方法，获取更新之后的DOM
+        this.$nextTick(() => {
+          //当执行这个回调的时候，保证服务器数据已经就位，且v-for执行完毕了【轮播图所要的结构已经解析出来了】
+          var mySwiper = new Swiper(
+           this.$refs.mySwiper,
+            {
+              loop: true,
+              //如果需要分页器
+              pagination: {
+                el: ".swiper-pagination",
+                //点击小球的时候也切换图片
+                clickable: true,
+              },
+              //如果需要前进后退按钮
+              navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              },
+            }
+          );
+        });
+      },
+    },
   },
 };
 </script>
