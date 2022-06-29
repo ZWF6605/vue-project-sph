@@ -9,6 +9,7 @@ const state = {
     categoryList: [],
     //轮播图的数据
     bannerList:[],
+    //floor组件的数据
     floorList:[]
 }
 const mutations = {
