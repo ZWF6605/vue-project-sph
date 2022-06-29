@@ -4,8 +4,12 @@ import App from './App.vue'
 import router from '@/router'
 //三级联动全局组件
 import TypeNav from '@/components/TypeNav'
+//轮播图全局组件
+import Carousel from '@/components/Carousel'
 //第一个参数：全局组件的name 第二个参数：对应的组件
 Vue.component(TypeNav.name,TypeNav)
+Vue.component(Carousel.name,Carousel)
+
 //引入仓库
 import store from '@/store'
 //引入mockServe.js----mock数据

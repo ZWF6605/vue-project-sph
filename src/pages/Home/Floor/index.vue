@@ -23,23 +23,7 @@
               <img :src="list.imgUrl" />
             </div>
             <div class="floorBanner">
-              <div class="swiper-container" ref="floor1Swiper">
-                <div class="swiper-wrapper">
-                  <div
-                    class="swiper-slide"
-                    v-for="carouselList in list.carouselList"
-                    :key="carouselList.id"
-                  >
-                    <img :src="carouselList.imgUrl" />
-                  </div>
-                </div>
-                <!-- 如果需要分页器 -->
-                <div class="swiper-pagination"></div>
-
-                <!-- 如果需要导航按钮 -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-              </div>
+              <Carousel :list="list.carouselList"></Carousel>
             </div>
             <div class="split">
               <span class="floor-x-line"></span>
@@ -70,26 +54,11 @@
 </template>
 
 <script>
-import Swiper from "swiper";
 export default {
   name: "Floor",
   props: ["list"],
   mounted() {
     //因为请求是父组件发的，并且通过props传递过来的，而且结构都已经解析出来的情况下执行mounted
-    var mySwiper = new Swiper(this.$refs.floor1Swiper, {
-      loop: true,
-      //如果需要分页器
-      pagination: {
-        el: ".swiper-pagination",
-        //点击小球的时候也切换图片
-        clickable: true,
-      },
-      //如果需要前进后退按钮
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-    });
   },
 };
 </script>
