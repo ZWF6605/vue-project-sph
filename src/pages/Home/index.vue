@@ -6,6 +6,7 @@
     <Recommend></Recommend>
     <Rank></Rank>
     <Like />
+    <!-- Floor组件是没有在内部发请求的，数据是通过props给的 -->
     <Floor v-for="(floor, index) in floorList" :key="floor.id" :list="floor"></Floor>
     <Brand></Brand>
   </div>
