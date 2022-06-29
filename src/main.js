@@ -8,9 +8,10 @@ import TypeNav from '@/components/TypeNav'
 Vue.component(TypeNav.name,TypeNav)
 //引入仓库
 import store from '@/store'
-//y引入mockServe.js----mock数据
+//引入mockServe.js----mock数据
 import '@/mock/mockServe'
-
+//引入Swiper样式
+import 'swiper/css/swiper.css'
 
 Vue.config.productionTip = false
 
