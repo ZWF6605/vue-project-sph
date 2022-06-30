@@ -12,15 +12,36 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
+            <!-- 分类的面包屑 -->
             <li class="with-x" v-if="searchParams.categoryName">
               {{ searchParams.categoryName
               }}<i @click="removeCategoryName">×</i>
+            </li>
+            <!-- 关键字面包屑 -->
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword }}<i @click="removeKeyword">×</i>
+            </li>
+            <!-- 品牌信息面包屑 -->
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(":")[1]
+              }}<i @click="removeTrademark">×</i>
+            </li>
+            <!-- 商品属性面包屑 -->
+            <li
+              class="with-x"
+              v-for="(attrValue, index) in searchParams.props"
+              :key="index"
+            >
+              {{ attrValue.split(":")[1] }}<i @click="removeAttr(index)">×</i>
             </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector
+          @trademarkInfo="trademarkInfo"
+          @attrInfo="attrInfo"
+        ></SearchSelector>
 
         <!--details-->
         <div class="details clearfix">
@@ -201,8 +222,47 @@ export default {
       //本意是删除query，如果路径中出现params不应该删除，路由跳转的时候应该带着
       if (this.$route.params) {
         this.$router.push({ name: "search", params: this.$route.params });
-      }else{
-        this.$router.push({ name: "search" })
+      }
+    },
+    //删除关键字
+    removeKeyword() {
+      //给服务器带的参数searchParams的keyword清空
+      this.searchParams.keyword = undefined;
+      this.getData();
+      //通知兄弟组件Header清除关键字
+      this.$bus.$emit("clear");
+      //进行路由跳转
+      if (this.$route.query) {
+        this.$router.push({ name: "search", query: this.$route.query });
+      }
+    },
+    //删除品牌信息
+    removeTrademark() {
+      this.searchParams.trademark = undefined;
+      this.getData();
+    },
+    //删除商品属性
+    removeAttr(index) {
+      //整理参数
+      this.searchParams.props.splice(index, 1);
+      //再次发请求
+      this.getData();
+    },
+    //自定义事件的回调
+    trademarkInfo(trademark) {
+      //整理品牌字段的参数 “ID:品牌名称”
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      this.getData();
+    },
+    //收集商品属性的自定义事件回调
+    attrInfo(attrs, attrValue) {
+      //整理好格式 示例["属性ID:属性值:属性名"]
+      let props = `${attrs.attrId}:${attrValue}:${attrs.attrName}`;
+      //数组去重,不然会无限返回
+      if (this.searchParams.props.indexOf(props) == -1) {
+        this.searchParams.props.push(props);
+        //再次发请求
+        this.getData();
       }
     },
   },
