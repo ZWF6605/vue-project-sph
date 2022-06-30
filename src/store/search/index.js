@@ -20,7 +20,21 @@ const actions={
     }
 }
 //计算属性： 在实际开发中，为了简化仓库数据而生
-const getters={}
+//可以把将来在组件当中要用的数据简化一下【方便组件获取数据】
+const getters={
+    //当前形参的state是当前仓库的state，并不是大仓库的state
+    //假如网络不给力|没有网state.searchList.goodList应该返回undefined
+    //计算新的属性值至少需要返回一个空数组
+    goodsList(state){
+        return state.searchList.goodsList||[]
+    },
+    trademarkList(state){
+        return state.searchList.trademarkList||[]
+    },
+    attrsList(state){
+        return state.searchList.attrsList||[]
+    }
+}
 export default {
     state,
     mutations,
