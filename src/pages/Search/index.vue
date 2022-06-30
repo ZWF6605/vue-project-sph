@@ -168,13 +168,7 @@ export default {
   },
   //当前组件挂载完毕之前执行一次【在mounted之前】
   beforeMount(){
-    //复杂写法
-    // console.log(this.$route);
-    // this.searchParams.category1Id=this.$route.query.category1Id
-    // this.searchParams.category2Id=this.$route.query.category2Id
-    // this.searchParams.category3Id=this.$route.query.category3Id
-    // this.searchParams.categoryName=this.$route.query.categoryName
-    // this.searchParams.keyword=this.$route.params.keyword
+    //在发请求之前，把接口需要传递的参数进行整理（把参数整理好，服务器就会返回要查询的数据）
     Object.assign(this.searchParams,this.$route.query,this.$route.params)
   },
   //组件挂载完毕z执行一次【仅仅执行一次】
@@ -194,6 +188,24 @@ export default {
       this.$store.dispatch("getSearchInfo", this.searchParams);
     },
   },
+  //数据监听：监听组件实例身上的属性值的变化
+  watch:{
+    //监听属性
+    $route:{
+      handler(){
+        //再次发送请求之前需要再整理参数发给服务器
+        Object.assign(this.searchParams,this.$route.query,this.$route.params)
+        //再次发起ajax请求
+        this.getData()
+        //每一次请求完毕，应该把相应的1、2、3级分类的id清空，准备接收下一次的1、2、3的ID
+        //分类名字与关键字不用清理：因为每一次路由发生变化的时候，都会给予重新赋值
+        this.searchParams.category1Id=''
+        this.searchParams.category2Id=''
+        this.searchParams.category3Id=''
+
+      }
+    }
+  }
 };
 </script>
 
