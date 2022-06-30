@@ -152,7 +152,7 @@ export default {
       //鼠标移出currentIndex，变为-1
       this.currentIndex = -1;
       //判断如果是Search路由组件的时候才会执行
-      if (this.$route.path == "/search") {
+      if (this.$route.path != "/home") {
         this.show = false;
       }
     },

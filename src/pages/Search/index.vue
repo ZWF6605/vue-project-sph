@@ -12,10 +12,10 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-if="searchParams.categoryName">
+              {{ searchParams.categoryName
+              }}<i @click="removeCategoryName">×</i>
+            </li>
           </ul>
         </div>
 
@@ -167,9 +167,9 @@ export default {
     SearchSelector,
   },
   //当前组件挂载完毕之前执行一次【在mounted之前】
-  beforeMount(){
+  beforeMount() {
     //在发请求之前，把接口需要传递的参数进行整理（把参数整理好，服务器就会返回要查询的数据）
-    Object.assign(this.searchParams,this.$route.query,this.$route.params)
+    Object.assign(this.searchParams, this.$route.query, this.$route.params);
   },
   //组件挂载完毕z执行一次【仅仅执行一次】
   mounted() {
@@ -187,25 +187,42 @@ export default {
     getData() {
       this.$store.dispatch("getSearchInfo", this.searchParams);
     },
+    //删除分类的名字
+    removeCategoryName() {
+      //给服务器的参数清空之后，还需要再发一次请求
+      //带给服务器参数说明可有可无的：如果属性为空字符串还是会把相应的字段带给服务器
+      //但是变为undefined就不会把字段带给服务器
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
+      this.searchParams.categoryName = undefined;
+      this.getData();
+      //地址栏也需要修改:进行路由跳转（search页面更新，干掉参数，自己挑自己）
+      //本意是删除query，如果路径中出现params不应该删除，路由跳转的时候应该带着
+      if (this.$route.params) {
+        this.$router.push({ name: "search", params: this.$route.params });
+      }else{
+        this.$router.push({ name: "search" })
+      }
+    },
   },
   //数据监听：监听组件实例身上的属性值的变化
-  watch:{
+  watch: {
     //监听属性
-    $route:{
-      handler(){
+    $route: {
+      handler() {
         //再次发送请求之前需要再整理参数发给服务器
-        Object.assign(this.searchParams,this.$route.query,this.$route.params)
+        Object.assign(this.searchParams, this.$route.query, this.$route.params);
         //再次发起ajax请求
-        this.getData()
+        this.getData();
         //每一次请求完毕，应该把相应的1、2、3级分类的id清空，准备接收下一次的1、2、3的ID
         //分类名字与关键字不用清理：因为每一次路由发生变化的时候，都会给予重新赋值
-        this.searchParams.category1Id=''
-        this.searchParams.category2Id=''
-        this.searchParams.category3Id=''
-
-      }
-    }
-  }
+        this.searchParams.category1Id = undefined;
+        this.searchParams.category2Id = undefined;
+        this.searchParams.category3Id = undefined;
+      },
+    },
+  },
 };
 </script>
 
