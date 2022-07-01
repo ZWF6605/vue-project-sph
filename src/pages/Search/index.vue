@@ -48,24 +48,13 @@
           <!-- 导航条 -->
           <div class="sui-navbar">
             <div class="navbar-inner filter">
+              <!-- 排序结构 -->
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:isOne}">
+                  <a href="#">综合<span v-show="isOne" class="iconfont" :class="{'icon-UP':isEsc,'icon-DOWN':isDesc}"></span></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active:isTwo}">
+                  <a href="#">价格<span v-show="isTwo" class="iconfont" :class="{'icon-UP':isEsc,'icon-DOWN':isDesc}"></span></a>
                 </li>
               </ul>
             </div>
@@ -171,8 +160,8 @@ export default {
         categoryName: "",
         //关键字
         keyword: "",
-        //排序
-        order: "",
+        //排序:初始化为综合|降序
+        order: "2:desc",
         //分页器参数，代表当前是第几页
         pageNo: 1,
         //每页展示多少数据
@@ -201,6 +190,18 @@ export default {
       //mapGetters里的写法：传递的数组，因为getters计算时没有划分模块【home，search】
       ["goodsList", "trademarkList", "attrsList"]
     ),
+    isOne(){
+      return this.searchParams.order.indexOf('1') != -1
+    },
+    isTwo(){
+      return this.searchParams.order.indexOf('2') != -1
+    },
+    isEsc(){
+      return this.searchParams.order.indexOf('asc')!=-1
+    },
+    isDesc(){
+      return this.searchParams.order.indexOf('desc')!=-1
+    }
   },
   methods: {
     //向服务器获取Search模块的数据（根据参数不同，返回不同的数据进行展示）
