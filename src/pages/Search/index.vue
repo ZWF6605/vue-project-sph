@@ -117,36 +117,8 @@
               </li>
             </ul>
           </div>
-          <!-- 分页器 -->
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <!-- 分页器:测试分页器阶段 -->
+          <Pagination :pageNo="1" :pageSize="3" :total="91" :continues="5"></Pagination>
         </div>
       </div>
     </div>
@@ -281,16 +253,18 @@ export default {
     //排序操作
     changeOder(flag) {
       //flag形参：它是一个标记，代表用户点击的是综合（1）还是价格（2）【用户点击的时候传递进来的】
-      //这里获取的是初始化的状态
+      //这里获取的是初始化的状态【需要通过初始状态去判断接下来要做什么】
       let originFlag = this.searchParams.order.split(":")[0];
       let originSort = this.searchParams.order.split(":")[1];
       //准备一个新的oder属性值
       let newOrder = "";
+      //判断的是多次点击的是不是同一个按钮
       //如果用户点击的参数和初始化参数相等，则传入（初始化的状态）：（再做判断，如果初始化的是降序的话改成升序，否则降序）
       //不相等的话，则传入（flag）：（默认为desc）
       if (flag == originFlag) {
         newOrder = `${originFlag}:${originSort == "desc" ? "asc" : "desc"}`;
       } else {
+        //点击的不是一个按钮
         newOrder = `${flag}:${"desc"}`;
       }
       //将新的order赋予searchParams
