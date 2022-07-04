@@ -81,9 +81,10 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
+                    <!-- 在路由跳转的时候切记别忘了带id（params）参数 -->
+                    <router-link :to="`/detail/${goodList.id}`"
                       ><img :src="goodList.defaultImg"
-                    /></a>
+                    /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -123,6 +124,7 @@
             :pageSize="searchParams.pageSize"
             :total="total"
             :continues="5"
+            @getPageNo="getPageNo"
           ></Pagination>
         </div>
       </div>
@@ -278,6 +280,13 @@ export default {
       this.searchParams.order = newOrder;
       this.getData();
     },
+    //自定义事件回调---获取当前第几页
+    getPageNo(pageNo){
+      //整理带给服务器的参数
+      this.searchParams.pageNo = pageNo
+      this.getData()
+      console.log(pageNo);
+    }
   },
   //数据监听：监听组件实例身上的属性值的变化
   watch: {
