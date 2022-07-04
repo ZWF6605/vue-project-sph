@@ -118,7 +118,12 @@
             </ul>
           </div>
           <!-- 分页器:测试分页器阶段 -->
-          <Pagination :pageNo="1" :pageSize="3" :total="91" :continues="5"></Pagination>
+          <Pagination
+            :pageNo="searchParams.pageNo"
+            :pageSize="searchParams.pageSize"
+            :total="total"
+            :continues="5"
+          ></Pagination>
         </div>
       </div>
     </div>
@@ -126,7 +131,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
 export default {
   name: "Search",
@@ -186,6 +191,8 @@ export default {
     isDesc() {
       return this.searchParams.order.indexOf("desc") != -1;
     },
+    //获取search模块展示产品一共多少数据
+    ...mapState({ total:state=>state.search.searchList.total }),
   },
   methods: {
     //向服务器获取Search模块的数据（根据参数不同，返回不同的数据进行展示）
