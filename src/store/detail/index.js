@@ -22,13 +22,19 @@ const actions = {
     }
 }
 const getters = {
+    //路径导航简化的数据
     categoryView(state) {
         //比如：state.goodInfo初始化的是一个空对象，空对象的categoryView的属性值是undefined
         //当前计算出的categoryView至少是个空对象，假的报错就不会有了
         return state.goodInfo.categoryView || {}
     },
+    //简化产品信息的数据
     skuInfo(state) {
         return state.goodInfo.skuInfo || {}
+    },
+    //商品属性的数据
+    spuSaleAttrList(state){
+        return state.goodInfo.spuSaleAttrList || []
     }
 }
 export default {
