@@ -41,5 +41,11 @@ export const reqGetFloorList = () => mockRequests({
 export const reqGetSearchInfo = (params) => requests({
     url: '/list',
     method: 'post',
-    data:params,
+    data: params,
+})
+
+//获取商品详情页信息的接口 地址"/api/item/{skuId}" 请求方式：get
+export const reqGoodsInfo = (skuid) => requests({
+    url: `/item/${skuid}`,
+    method: 'get'
 })

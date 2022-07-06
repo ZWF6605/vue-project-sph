@@ -40,6 +40,7 @@ export default new VueRouter({
     routes,
     scrollBehavior(to, from, savedPosition) {
         return {
+            //返回这个y=0，代表定位到滚动条的最上方
             y: 0
         }
     }

@@ -7,17 +7,22 @@
     <section class="con">
       <!-- 导航路径区域 -->
       <div class="conPoin">
-        <span>手机、数码、通讯</span>
-        <span>手机</span>
-        <span>Apple苹果</span>
-        <span>iphone 6S系类</span>
+        <span v-show="categoryView.category1Name">{{
+          categoryView.category1Name
+        }}</span>
+        <span v-show="categoryView.category2Name">{{
+          categoryView.category2Name
+        }}</span>
+        <span v-show="categoryView.category3Name">{{
+          categoryView.category3Name
+        }}</span>
       </div>
       <!-- 主要内容区域 -->
       <div class="mainCon">
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom />
+          <Zoom :skuImageList="skuImageList" />
           <!-- 小图列表 -->
           <ImageList />
         </div>
@@ -25,10 +30,10 @@
         <div class="InfoWrap">
           <div class="goodsDetail">
             <h3 class="InfoName">
-              Apple iPhone 6s（A1700）64G玫瑰金色 移动通信电信4G手机
+              {{ skuInfo.skuName }}
             </h3>
             <p class="news">
-              推荐选择下方[移动优惠购],手机套餐齐搞定,不用换号,每月还有花费返
+              {{ skuInfo.skuDesc }}
             </p>
             <div class="priceArea">
               <div class="priceArea1">
@@ -37,7 +42,7 @@
                 </div>
                 <div class="price">
                   <i>¥</i>
-                  <em>5299</em>
+                  <em>{{ skuInfo.price }}</em>
                   <span>降价通知</span>
                 </div>
                 <div class="remark">
@@ -68,7 +73,7 @@
               </div>
               <div class="supportArea">
                 <div class="title">配 送 至</div>
-                <div class="fixWidth">广东省 深圳市 宝安区</div>
+                <div class="fixWidth">福建省 厦门市 思明区</div>
               </div>
             </div>
           </div>
@@ -349,13 +354,24 @@
 <script>
 import ImageList from "./ImageList/ImageList";
 import Zoom from "./Zoom/Zoom";
-
+import { mapGetters } from "vuex";
 export default {
   name: "Detail",
-
   components: {
     ImageList,
     Zoom,
+  },
+  computed: {
+    ...mapGetters(["categoryView", "skuInfo"]),
+    //给予组件的数据
+    skuImageList() {
+      //如果服务器数据没有回来，skuInfo这个对象是个空对象
+      return this.skuInfo.skuImageList || {};
+    },
+  },
+  mounted() {
+    //派发action，获取产品详情的信息
+    this.$store.dispatch("getGoodInfo", this.$route.params.skuid);
   },
 };
 </script>

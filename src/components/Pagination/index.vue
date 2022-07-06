@@ -51,6 +51,7 @@ export default {
       active:false
     }
   },
+  //父组件给子组件传递的数据：当前页码、每一页的数据条数，数据总个数，连续页码数
   props: ["pageNo", "pageSize", "total", "continues"],
   computed: {
     //总共多少页
