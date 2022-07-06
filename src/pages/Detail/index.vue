@@ -88,7 +88,12 @@
                   :class="{ active: spuSaleAttrValue.isChecked == 1 }"
                   v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
-                  @click="changeActive(spuSaleAttrValue,spuSaleAttr.spuSaleAttrValueList)"
+                  @click="
+                    changeActive(
+                      spuSaleAttrValue,
+                      spuSaleAttr.spuSaleAttrValueList
+                    )
+                  "
                 >
                   {{ spuSaleAttrValue.saleAttrValueName }}
                 </dd>
@@ -96,9 +101,19 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input
+                  autocomplete="off"
+                  class="itxt"
+                  v-model="skuNub"
+                  @change="changeSkuNub"
+                />
+                <a href="javascript:" class="plus" @click="skuNub++">+</a>
+                <a
+                  href="javascript:"
+                  class="mins"
+                  @click="skuNub > 1 ? skuNub-- : (skuNub = 1)"
+                  >-</a
+                >
               </div>
               <div class="add">
                 <a href="javascript:">加入购物车</a>
@@ -349,6 +364,12 @@ export default {
     ImageList,
     Zoom,
   },
+  data() {
+    return {
+      //购买产品的个数
+      skuNub: 1,
+    };
+  },
   computed: {
     ...mapGetters(["categoryView", "skuInfo", "spuSaleAttrList"]),
     //给予组件的数据
@@ -361,16 +382,27 @@ export default {
     //派发action，获取产品详情的信息
     this.$store.dispatch("getGoodInfo", this.$route.params.skuid);
   },
-  methods:{
-    changeActive(saleAttrValue,arr){
+  methods: {
+    changeActive(saleAttrValue, arr) {
       //遍历全部的售卖属性值为0
-      arr.forEach(item=>{
-        item.isChecked = '0'
-      })
+      arr.forEach((item) => {
+        item.isChecked = "0";
+      });
       //点击的售卖属性值
-      saleAttrValue.isChecked = 1
-    }
-  }
+      saleAttrValue.isChecked = 1;
+    },
+    changeSkuNub(event) {
+      //用户输入进来的文本*1
+      let value = event.target.value * 1;
+      //如果用户输入进来的是非数,
+      if (isNaN(value) || value < 1) {
+        this.skuNub = 1;
+      } else {
+        //正常大于一【但必须是整数】
+        this.skuNub = parseInt(value);
+      }
+    },
+  },
 };
 </script>
 
