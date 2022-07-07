@@ -1,9 +1,11 @@
 import {
-    reqGoodsInfo
+    reqGoodsInfo,
+    reqAddOrUpdateShopCart
 } from "@/api"
 
 const state = {
-    goodInfo: {}
+    goodInfo: {},
+
 }
 const mutations = {
     GETGOODINFO(state, goodInfo) {
@@ -19,6 +21,26 @@ const actions = {
         if (result.code == 200) {
             commit('GETGOODINFO', result.data)
         }
+    },
+    //将产品添加到购物车中
+    async addOrUpdateShopCart({
+        commit
+    }, {
+        skuid,
+        skuNum
+    }) {
+        //发请求：前端带一些参数给服务器【需要存储这些数据】，存储成功了，没有给返回数据
+        //不需要三连环（数据存储在仓库）
+        //注意：async函数执行返回的结果一定是Promise【要么成功||失败】
+        let result = await reqAddOrUpdateShopCart(skuid, skuNum)
+
+        if (result.code == 200) {
+            //代表服务器加入购物车成功
+            return 'ok'
+        } else {
+            //代表加入购物车失败
+            return Promise.reject(new Error('faile'))
+        }
     }
 }
 const getters = {
@@ -33,7 +55,7 @@ const getters = {
         return state.goodInfo.skuInfo || {}
     },
     //商品属性的数据
-    spuSaleAttrList(state){
+    spuSaleAttrList(state) {
         return state.goodInfo.spuSaleAttrList || []
     }
 }

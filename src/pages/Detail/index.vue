@@ -116,7 +116,8 @@
                 >
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <!--  -->
+                <a @click="addShopCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -383,6 +384,7 @@ export default {
     this.$store.dispatch("getGoodInfo", this.$route.params.skuid);
   },
   methods: {
+    //产品售卖属性切换高亮
     changeActive(saleAttrValue, arr) {
       //遍历全部的售卖属性值为0
       arr.forEach((item) => {
@@ -391,6 +393,7 @@ export default {
       //点击的售卖属性值
       saleAttrValue.isChecked = 1;
     },
+    //表单元素修改产品个数
     changeSkuNub(event) {
       //用户输入进来的文本*1
       let value = event.target.value * 1;
@@ -401,6 +404,31 @@ export default {
         //正常大于一【但必须是整数】
         this.skuNub = parseInt(value);
       }
+    },
+    //加入购物车的回调函数
+    async addShopCart() {
+      //1.在点击加入购物车按钮的时候，做的第一件事情，将参数带给服务器（发请求），通知服务器加入购物车的产品是谁
+      //this.$store.dispatch("addOrUpdateShopCart")，这个是在调用vuex仓库中的函数
+      //2.需要知道这次请求成功还是失败，如果成功进行路由跳转，如果失败给用户提示
+      try {
+        //成功
+        await this.$store.dispatch("addOrUpdateShopCart", {
+          skuid: this.$route.params.skuid,
+          skuNum: this.skuNub,
+        });
+        //3.路由跳转
+        //4.在路由跳转的时候，还需要将产品信息带给下一级的路由组件
+        //一些简单的数据skuNub，通过query形式给路由组件传递过去
+        //产品信息的数据【比较复杂：skuInfo】，通过会话存储（不持久化，会话结束就消失）
+        //本地存储|会话存储（一般存储的是字符串）
+        sessionStorage.setItem("SKUINFO",JSON.stringify(this.skuInfo));
+        this.$router.push({name:'addcartsuccess',query:{skuNum:this.skuNub}})
+      } catch (error) {
+        //失败
+        alert(error.message);
+      }
+      //服务器存储成功---进行路由跳转传递参数
+      //服务器存储失败---给用户提示
     },
   },
 };
