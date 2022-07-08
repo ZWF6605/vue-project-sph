@@ -52,8 +52,8 @@ export const reqGoodsInfo = (skuid) => requests({
 
 //将产品添加到购物车中，或者更新某一个产品的个数
 // /api/cart/addToCart/{skuid}/{skuNum}  POST
-export const reqAddOrUpdateShopCart = (skuid,skuNum)=>requests({
-    url:`/cart/addToCart/${skuid}/${skuNum}`,
+export const reqAddOrUpdateShopCart = (skuId,skuNum)=>requests({
+    url:`/cart/addToCart/${skuId}/${skuNum}`,
     method:'post'
 })
 

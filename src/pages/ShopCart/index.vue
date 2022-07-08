@@ -13,7 +13,7 @@
       <div class="cart-body">
         <ul
           class="cart-list"
-          v-for="(cart, index) in cartInfoList"
+          v-for="(cart) in cartInfoList"
           :key="cart.id"
         >
           <li class="cart-list-con1">
@@ -34,15 +34,16 @@
             <span class="price">{{ cart.cartPrice }}</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins">-</a>
+            <a class="mins" @click="handler('minus', -1, cart)">-</a>
             <input
               autocomplete="off"
               type="text"
               :value="cart.skuNum"
               minnum="1"
               class="itxt"
+              @change="handler('change', $event.target.value * 1, cart)"
             />
-            <a href="javascript:void(0)" class="plus">+</a>
+            <a class="plus" @click="handler('add', 1, cart)">+</a>
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{ cart.cartPrice * cart.skuNum }}</span>
@@ -57,7 +58,7 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllCheck"/>
+        <input class="chooseAll" type="checkbox" :checked="isAllCheck" />
         <span>全选</span>
       </div>
       <div class="option">
@@ -69,7 +70,7 @@
         <div class="chosed">已选择 <span>0</span>件商品</div>
         <div class="sumprice">
           <em>总价（不含运费） ：</em>
-          <i class="summoney">{{totalPrice}}</i>
+          <i class="summoney">{{ totalPrice }}</i>
         </div>
         <div class="sumbtn">
           <a class="sum-btn" href="###" target="_blank">结算</a>
@@ -91,6 +92,45 @@ export default {
     getData() {
       this.$store.dispatch("getCartList");
     },
+    //修改某一个产品的个数
+    async handler(type, disNum, cart) {
+      //type：为了区分这三个元素
+      //目前disNum形参，变化量（1） 变化量（-1） input最终的个数（并不是变化量）
+      //cart：哪一个产品【身上有ID】
+
+      //向服务器发请求，修改数量
+      switch (type) {
+        case "add":
+          //带给服务器变化的量
+          disNum = 1;
+          break;
+        case "minus":
+          //判断产品的个数大于1，才可以传递给服务器-1
+          //如果产品出现个数小于1，传递给服务器个数0（原封不动）
+          disNum = cart.skuNum > 1 ? -1 : 0;
+          break;
+        case "change":
+          //用户输入进来的最终量，非法的（带有汉字||负数）、带给服务器的数字0
+          // if (isNaN(disNum) || disNum < 1) {
+          //   disNum = 0;
+          // } else {
+          //   //属于正常情况，小暑向下取整，带给服务器变化的量   用户输入进来的数 - 产品起始个数
+          //   disNum = parseInt(disNum) - cart.skuNum;
+          // }
+          disNum =
+            isNaN(disNum) || disNum < 1 ? 0 : parseInt(disNum) - cart.skuNum;
+          break;
+      }
+      //派发action
+      try {
+        //代表的是修改成功
+        await this.$store.dispatch("addOrUpdateShopCart", {
+          skuId: cart.skuId,
+          skuNum: disNum,
+        });
+        this.getData();
+      } catch (error) {}
+    },
   },
   computed: {
     ...mapGetters(["cartList"]),
@@ -98,19 +138,19 @@ export default {
       return this.cartList.cartInfoList || [];
     },
     //计算购买产品的总价
-    totalPrice(){
-      let sum = 0
-      this.cartInfoList.forEach(item => {
-        sum+=item.cartPrice*item.skuNum
+    totalPrice() {
+      let sum = 0;
+      this.cartInfoList.forEach((item) => {
+        sum += item.cartPrice * item.skuNum;
       });
-      return sum
+      return sum;
     },
     //判断底部复选框是否勾选【全部商品选中才勾选】
-    isAllCheck(){
+    isAllCheck() {
       //遍历数组里面原理，只要全部元素isCHecked属性都为1===>真true
       //只要有一个不是1====>假false
-      return this.cartInfoList.every(item=>item.isChecked==1)
-    }
+      return this.cartInfoList.every((item) => item.isChecked == 1);
+    },
   },
 };
 </script>
