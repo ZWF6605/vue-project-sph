@@ -11,16 +11,13 @@
         <div class="cart-th6">操作</div>
       </div>
       <div class="cart-body">
-        <ul
-          class="cart-list"
-          v-for="(cart) in cartInfoList"
-          :key="cart.id"
-        >
+        <ul class="cart-list" v-for="cart in cartInfoList" :key="cart.id">
           <li class="cart-list-con1">
             <input
               type="checkbox"
               name="chk_list"
               :checked="cart.isChecked == 1"
+              @change="updateChecked(cart, $event)"
             />
           </li>
           <li class="cart-list-con2">
@@ -49,7 +46,7 @@
             <span class="sum">{{ cart.cartPrice * cart.skuNum }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a class="sindelet" @click="deleteCartById(cart)">删除</a>
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -58,13 +55,18 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllCheck" />
+        <input
+          class="chooseAll"
+          type="checkbox"
+          :checked="isAllCheck && cartInfoList.length > 0"
+          @change="updateAllCartChecked"
+        />
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
-        <a href="#none">移到我的关注</a>
-        <a href="#none">清除下柜商品</a>
+        <a @click="deleteAllCheckedCart">删除选中的商品</a>
+        <a>移到我的关注</a>
+        <a>清除下柜商品</a>
       </div>
       <div class="money-box">
         <div class="chosed">已选择 <span>0</span>件商品</div>
@@ -82,6 +84,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import throttle from "lodash/throttle";
 export default {
   name: "ShopCart",
   mounted() {
@@ -93,12 +96,12 @@ export default {
       this.$store.dispatch("getCartList");
     },
     //修改某一个产品的个数
-    async handler(type, disNum, cart) {
+    handler: throttle(async function (type, disNum, cart) {
       //type：为了区分这三个元素
       //目前disNum形参，变化量（1） 变化量（-1） input最终的个数（并不是变化量）
       //cart：哪一个产品【身上有ID】
 
-      //向服务器发请求，修改数量
+      //向服务器发请求，修改数量[函数节流]
       switch (type) {
         case "add":
           //带给服务器变化的量
@@ -130,6 +133,53 @@ export default {
         });
         this.getData();
       } catch (error) {}
+    }, 1000),
+    //删除购物车某一个产品
+    async deleteCartById(cart) {
+      try {
+        //如果删除成功再次发请求获取新的数据进行展示
+        await this.$store.dispatch("deleteCartListBySkuId", cart.skuId);
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    //修改某个产品的勾选状态
+    async updateChecked(cart, event) {
+      //带给服务器的参数isChecked，不是布尔值，应该是0|1
+      try {
+        //如果修改数据成功了，再次获取服务器数据
+        let isChecked = event.target.checked ? "1" : "0";
+        await this.$store.dispatch("updateCheckedById", {
+          skuId: cart.skuId,
+          isChecked,
+        });
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    //删除全部选中的购物车商品
+    //这个回调函数没办法收集到有用的数据
+    async deleteAllCheckedCart() {
+      //派发一个acition
+      try {
+        await this.$store.dispatch("deleteAllCheckedCart");
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    //修改全部产品的选中状态
+    async updateAllCartChecked(event) {
+      try {
+        let isChecked = event.target.checked ? "1" : "0";
+        //派发action
+        await this.$store.dispatch("updateAllCartIsChecked", isChecked);
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
     },
   },
   computed: {

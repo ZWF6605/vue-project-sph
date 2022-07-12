@@ -413,7 +413,7 @@ export default {
       try {
         //成功
         await this.$store.dispatch("addOrUpdateShopCart", {
-          skuid: this.$route.params.skuid,
+          skuId: this.$route.params.skuid,
           skuNum: this.skuNub,
         });
         //3.路由跳转
