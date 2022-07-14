@@ -91,3 +91,11 @@ export const reqUserRegister=(data)=>requests({
     data,
     method:'post'
 })
+
+//登录
+//URL:/api/user/passport/login  method:post phone password
+export const reqUserLogin=(data)=>requests({
+    url:'/user/passport/login',
+    data,
+    method:'post'
+})
