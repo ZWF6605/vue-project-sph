@@ -84,8 +84,13 @@ const actions = {
         commit
     }) {
         let result = await reqUserInfo()
-        //提交用户信息
+        if(result.code==200){
+            //提交用户信息
         commit('GETUSERINFO', result.data)
+        return 'ok'
+        }else{
+            return Promise.reject(new Error('faile'))
+        }
     },
     //退出登录
     async userLogout({
