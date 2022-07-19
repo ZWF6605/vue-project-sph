@@ -20,13 +20,18 @@ import '@/mock/mockServe'
 //引入Swiper样式
 import 'swiper/css/swiper.css'
 
+//统一接收api文件夹里面全部请求函数
+import * as API from './api'
+
 Vue.config.productionTip = false
+
 
 new Vue({
   render: h => h(App),
   //全局时间总线$bus配置
   beforeCreate() {
     Vue.prototype.$bus = this
+    Vue.prototype.$API = API
   },
 
   //注册路由：以下写法是kv一致省略v【router是小写的】
