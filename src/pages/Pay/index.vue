@@ -99,9 +99,9 @@ export default {
   data() {
     return {
       payInfo: {},
-      timer:null,
+      timer: null,
       //支付状态码
-      code:''
+      code: "",
     };
   },
   computed: {
@@ -137,24 +137,46 @@ export default {
         confirmButtonText: "已支付订单",
         //右上角关闭按钮
         showClose: false,
+        //关闭弹出框的配置
+        beforeClose: (type, instance, done) => {
+          //type:区分取消还是确定
+          //instance：当前组件实例
+          //done：关闭弹出框的方法
+          if (type == "cancel") {
+            alert("请联系管理员");
+            //清除定时器
+            clearInterval(this.timer);
+            this.timer = null;
+            //关闭弹窗
+            done();
+          } else {
+            //判断是否真的支付了
+            // if (this.code == 200) {
+              clearInterval(this.timer);
+              this.timer = null;
+              done();
+              this.$router.push('/paysuccess')
+            // }
+          }
+        },
       });
       //需要知道支付成功与失败
       //支付成功，跳转路由，支付失败，提示信息
-      if(!this.timer){
-        this.timer = setTimeout(async ()=>{
-          let result = await this.$API.reqPayStatus(this.orderId)
-          if(result.code==200){
+      if (!this.timer) {
+        this.timer = setTimeout(async () => {
+          let result = await this.$API.reqPayStatus(this.orderId);
+          if (result.code == 200) {
             //第一步：清除定时器
-            clearInterval(this.timer)
-            this.timer=null
+            clearInterval(this.timer);
+            this.timer = null;
             //保存支付成功返回的code
-            this.code=result.code
+            this.code = result.code;
             //关闭弹框
-            this.$msgbox.close()
+            this.$msgbox.close();
             //跳转路由
-            this.$router.push('/paysuccess')
+            this.$router.push("/paysuccess");
           }
-        },1000)
+        }, 1000);
       }
     },
   },
