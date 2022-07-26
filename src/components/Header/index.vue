@@ -1,5 +1,7 @@
 <template>
   <header class="header">
+    <!-- <h1 v-upper="msg"></h1> -->
+
     <!-- 头部的第一行 -->
     <div class="top">
       <div class="container">
@@ -13,13 +15,13 @@
           </p>
           <!-- 已登录 -->
           <p v-else>
-            <a>{{userName}}</a>
+            <a>{{ userName }}</a>
             <a class="register" @click="logout">退出登录</a>
           </p>
         </div>
         <div class="typeList">
-          <a href="###">我的订单</a>
-          <a href="###">我的购物车</a>
+          <router-link to="/center/myorder">我的订单</router-link>
+          <router-link to="/shopcart">我的购物车</router-link>
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
           <a href="###">企业采购</a>
@@ -62,6 +64,7 @@ export default {
   name: "Header",
   data() {
     return {
+      // msg: "abc",
       keyword: "",
     };
   },
@@ -107,19 +110,17 @@ export default {
       }
     },
     //退出登录
-    async logout(){
+    async logout() {
       //退出登录需要做的事情
       //1.需要发请求，通知服务器退出登录【清楚一些数据：token】
       //2.清除项目当中的数据【userInfo，token】
       try {
         //如果退出成功
-      await this.$store.dispatch('userLogout')
-      //回到首页
-      this.$router.push('/home')
-      } catch (error) {
-        
-      }
-    }
+        await this.$store.dispatch("userLogout");
+        //回到首页
+        this.$router.push("/home");
+      } catch (error) {}
+    },
   },
   computed: {
     //用户名信息
@@ -133,7 +134,6 @@ export default {
       this.keyword = "";
     });
   },
-  
 };
 </script>
 

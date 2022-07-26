@@ -1,5 +1,6 @@
 <template>
   <div>
+    
     <!-- 商品分类三级列表 -->
     <TypeNav />
     <div class="main">
@@ -35,6 +36,7 @@
               {{ attrValue.split(":")[1] }}<i @click="removeAttr(index)">×</i>
             </li>
           </ul>
+          
         </div>
 
         <!--selector-->
@@ -83,7 +85,7 @@
                   <div class="p-img">
                     <!-- 在路由跳转的时候切记别忘了带id（params）参数 -->
                     <router-link :to="`/detail/${goodList.id}`"
-                      ><img :src="goodList.defaultImg"
+                      ><img v-lazy="goodList.defaultImg"
                     /></router-link>
                   </div>
                   <div class="price">
@@ -129,6 +131,7 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -139,6 +142,7 @@ export default {
   name: "Search",
   data() {
     return {
+      
       //带给服务器的参数
       searchParams: {
         //一级分类的ID

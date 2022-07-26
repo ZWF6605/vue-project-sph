@@ -49,6 +49,15 @@ export default [
         component: Pay,
         meta: {
             show: true
+        },
+        beforeEnter:(to,from,next)=>{
+            //去支付页面：必须是从交易页面而来
+            if(from.path=="/trade"){
+                next()
+            }else{
+                //其他的路由组件而来，停留当前页面
+                next(false)
+            }
         }
     },
     {
@@ -56,6 +65,16 @@ export default [
         component: Trade,
         meta: {
             show: true
+        },
+        //路由独享守卫
+        beforeEnter:(to,from,next)=>{
+            //去交易页面：必须是从购物车而来
+            if(from.path=="/shopcart"){
+                next()
+            }else{
+                //其他的路由组件而来，停留当前页面
+                next(false)
+            }
         }
     },
     {

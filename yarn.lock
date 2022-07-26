@@ -6033,6 +6033,11 @@
   "resolved" "https://registry.npmmirror.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz"
   "version" "2.3.4"
 
+"vue-lazyload@^1.2.4":
+  "integrity" "sha512-K0frbPQJuvFHVpdl/ov5CqCR/CHWeLGs8E8V1d/09DIETqBjeGhC1fLMmwUy3Go2Yd/VX610AZ7Mdn4B54592Q=="
+  "resolved" "https://registry.npmjs.org/vue-lazyload/-/vue-lazyload-1.3.4.tgz"
+  "version" "1.3.4"
+
 "vue-loader@^17.0.0":
   "integrity" "sha512-OWSXjrzIvbF2LtOUmxT3HYgwwubbfFelN8PAP9R9dwpIkj48TVioHhWWSx7W7fk+iF5cgg3CBJRxwTdtLU4Ecg=="
   "resolved" "https://registry.npmmirror.com/vue-loader/-/vue-loader-17.0.0.tgz"

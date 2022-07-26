@@ -9,11 +9,13 @@ import Carousel from '@/components/Carousel'
 //分页器全局组件
 import Pagination from '@/components/Pagination'
 //按需引入elementUI
-import { MessageBox } from 'element-ui';
+import {
+  MessageBox
+} from 'element-ui';
 //第一个参数：全局组件的name 第二个参数：对应的组件
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carousel.name, Carousel)
-Vue.component(Pagination.name,Pagination)
+Vue.component(Pagination.name, Pagination)
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
 //引入仓库
@@ -25,9 +27,24 @@ import 'swiper/css/swiper.css'
 
 //统一接收api文件夹里面全部请求函数
 import * as API from './api'
-
+//图片资源
+import Luffy from '@/assets/1.gif'
 Vue.config.productionTip = false
 
+//引入插件
+import VueLazyload from 'vue-lazyload'
+//注册插件
+Vue.use(VueLazyload, {
+  //懒加载默认图片
+  loading: Luffy
+})
+
+
+//引入自定义插件
+import myPlugins from '@/plugins/myplugins'
+Vue.use(myPlugins,{
+  name:'upper'
+})
 
 new Vue({
   render: h => h(App),
