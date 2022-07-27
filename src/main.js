@@ -46,6 +46,9 @@ Vue.use(myPlugins,{
   name:'upper'
 })
 
+//引入表单校验插件
+import "@/plugins/validate"
+
 new Vue({
   render: h => h(App),
   //全局时间总线$bus配置
